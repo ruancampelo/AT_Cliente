@@ -15,12 +15,6 @@ import java.nio.charset.StandardCharsets;
 
 public class Main {
     public static void main(String[] args) {
-        Cliente();
-    }
-
-
-    private static void Cliente() {
-
         String path = "http://localhost:8080/api";
 
         JFrame frame = new JFrame("Cliente");
@@ -83,6 +77,7 @@ public class Main {
         frame.add(panel);
         frame.setVisible(true);
     }
+
 
     private static String LerResultado(HttpURLConnection connection) throws IOException {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {

@@ -55,22 +55,22 @@ public class Main {
             }
 
             private void updateLabel() {
-                try{
-                    HttpURLConnection connection = HttpConnection(path, dados);
+                if (dados.getText().length() == 10) {
+                    try{
+                        HttpURLConnection connection = HttpConnection(path, dados);
+                        String resultResponse = LerResultado(connection);
 
-                    // Ler a resposta da requisição
-                    String resultResponse = LerResultado(connection);
-
-                    if(resultResponse.equals("NACK")) {
-                        result.setBackground(Color.RED);
-                        Temporizador(result);
-                    } else {
-                        result.setBackground(Color.GREEN);
-                        Temporizador(result);
+                        if(resultResponse.equals("NACK")) {
+                            result.setBackground(Color.RED);
+                            Temporizador(result);
+                        } else {
+                            result.setBackground(Color.GREEN);
+                            Temporizador(result);
+                        }
+                        connection.disconnect();
+                    }catch (Exception ex) {
                     }
-                    // Fechar a conexão
-                    connection.disconnect();
-                }catch (Exception ex) {
+                    SwingUtilities.invokeLater(() -> dados.setText(""));
                 }
             }
         });
@@ -98,20 +98,15 @@ public class Main {
     private static HttpURLConnection HttpConnection(String path, JTextField dados) throws IOException {
         URL url = new URL(path);
 
-        // Abrir conexão HttpURLConnection
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        // Configurar a conexão para requisição POST
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
 
-        // Habilitar envio de dados na requisição
         connection.setDoOutput(true);
 
-        // Dados a serem enviados no corpo da requisição
         String requestBody = "{\"dados\": "+ dados.getText()+"}";
 
-        // Escrever os dados no corpo da requisição
         try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
             byte[] postData = requestBody.getBytes(StandardCharsets.UTF_8);
             wr.write(postData);
